@@ -1,71 +1,43 @@
 // Solution to the challenge at https://app.codility.com/programmers/lessons/5-prefix_sums/min_avg_two_slice/
-
 namespace CodilityChallenges
 {
     using System;
-    using System.Collections.Generic;
 
     class Solution
     {
         public static int solution(int[] A)
         {
-            List<double> averagesList = new List<double>();
-            List<int> openingIndexList = new List<int>();
-
-            for (int openingIndex = 0; openingIndex < A.Length - 1; openingIndex++)
+            double avOfSlice = 100001;
+            int indexOfSlice = 0;
+            for (int openingIndex = 0; openingIndex < A.Length; openingIndex++)
             {
-                for (int closingIndex = 0; closingIndex < A.Length; closingIndex++)
+                double runningtot = A[openingIndex];
+                int count = 1;
+                for (int closingIndex = openingIndex + 1; closingIndex < A.Length; closingIndex++)
                 {
-                    if(closingIndex <= openingIndex)
+                    runningtot += A[closingIndex];
+                    double tempAv = runningtot / ++count;
+                    if (tempAv == avOfSlice)
                     {
-                        continue;
+                        indexOfSlice = openingIndex > indexOfSlice ? indexOfSlice : openingIndex;
                     }
-                    double av = GetAverage(A, openingIndex, closingIndex);
-                    averagesList.Add(av);
-                    openingIndexList.Add(openingIndex);
+                    if (tempAv < avOfSlice)
+                    {
+                        avOfSlice = tempAv;
+                        indexOfSlice = openingIndex;
+                    }
                 }
             }
-            return GetLowest(averagesList, openingIndexList);
+            return indexOfSlice;
         }
 
-        private static int GetLowest(List<double> averagesList, List<int> openingIndexList)
-        {
-            List<int> lowestOpeningValsList = new List<int>();
-            // Find minimum slice figure
-            double min = averagesList[0];
-            for (int index = 0; index < averagesList.Count; index++)
-            {
-                if(averagesList[index] < min)
-                {
-                    min = averagesList[index];
-                }
-            }
-            // Get opening values corresponding to minimum slice figure.
-            for (int index = 0; index < averagesList.Count; index++)
-            {
-                if(averagesList[index] == min)
-                {
-                    lowestOpeningValsList.Add(openingIndexList[index]);
-                }
-            }
-            lowestOpeningValsList.Sort();
-            return lowestOpeningValsList[0];
-        }
-
-        private static double GetAverage(int[] numberArray, int openingIndex, int closingIndex)
-        {
-            double tot = 0;
-            for(int index = openingIndex; index < (closingIndex + 1); index++)
-            {
-                tot += numberArray[index];
-            }
-            return tot / ((closingIndex - openingIndex) + 1);
-        }
 
         public static void Main(string[] args)
         {
-            int[] A = { 4, 2, 2, 5, 1, 5, 8}; // Expected value 1
+            int[] A = { 4, 2, 2, 5, 1, 5, 8 }; // Expected value 1
             Console.WriteLine(solution(A));
+            int[] B = { -3, -5, -8, -4, -10 }; // Expected value 2.
+            Console.WriteLine(solution(B));
         }
     }
 }
