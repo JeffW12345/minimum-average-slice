@@ -11,16 +11,18 @@ namespace CodilityChallenges
             int indexOfSlice = 0;
             for (int openingIndex = 0; openingIndex < A.Length; openingIndex++)
             {
-                double runningtot = A[openingIndex];
+                double runningTot = A[openingIndex];
                 int count = 1;
                 for (int closingIndex = openingIndex + 1; closingIndex < A.Length; closingIndex++)
                 {
-                    runningtot += A[closingIndex];
-                    double tempAv = runningtot / ++count;
+                    runningTot += A[closingIndex];
+                    double tempAv = runningTot / ++count;
+                    // If there is a 'draw', ensures the lowest qualifying opening index is the one returned. 
                     if (tempAv == avOfSlice)
                     {
                         indexOfSlice = openingIndex > indexOfSlice ? indexOfSlice : openingIndex;
                     }
+                    // If current slice average value is lower 'lowest so far' value, make 'lowest so far' value equal current slice average value. 
                     if (tempAv < avOfSlice)
                     {
                         avOfSlice = tempAv;
